@@ -22,10 +22,24 @@ public class ActionItemTarget implements Target {
     @Override
     public Point getPoint() {
         setUp();
-        return new ViewTarget(mActionBarWrapper.getActionItem(mItemId)).getPoint();
+        ViewTarget viewTarget = new ViewTarget(mActionBarWrapper.getActionItem(mItemId));
+        Point point = viewTarget.getPoint();
+    	if (point == null) {
+    		point = getAlternativePoint();
+    	}
+        return point;
     }
 
-    protected void setUp() {
+    private Point getAlternativePoint() {
+    	ViewTarget viewTarget = new ViewTarget(mActionBarWrapper.getOverflowView());
+    	Point point = viewTarget.getPoint();
+    	if (point == null) {
+    		return new Point(0, 0);
+    	}
+		return point;
+	}
+
+	protected void setUp() {
         BaseReflector reflector = BaseReflector.getReflectorForActivity(mActivity);
         ViewParent p = reflector.getActionBarView(); //ActionBarView
         mActionBarWrapper = new ActionBarViewWrapper(p);
