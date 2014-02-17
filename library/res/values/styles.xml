@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ShowcaseButton">
         <item name="android:layout_width">wrap_content</item>
@@ -15,14 +15,14 @@
     <style name="ShowcaseView.Light">
         <item name="sv_titleTextAppearance">@style/TextAppearance.ShowcaseView.Title</item>
         <item name="sv_detailTextAppearance">@style/TextAppearance.ShowcaseView.Detail.Light</item>
-        <item name="sv_backgroundColor">#3333B5E5</item>
+        <item name="sv_backgroundColor">#AA134d76</item>
         <item name="sv_buttonText">@string/ok</item>
     </style>
 
     <style name="ShowcaseView">
         <item name="sv_titleTextAppearance">@style/TextAppearance.ShowcaseView.Title</item>
         <item name="sv_detailTextAppearance">@style/TextAppearance.ShowcaseView.Detail</item>
-        <item name="sv_backgroundColor">#3333B5E5</item>
+        <item name="sv_backgroundColor">#AA134d76</item>
         <item name="sv_buttonText">@string/ok</item>
     </style>
 
