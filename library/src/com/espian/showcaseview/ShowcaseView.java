@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -28,6 +29,8 @@ import android.widget.RelativeLayout;
 import com.espian.showcaseview.actionbar.ActionBarViewWrapper;
 import com.espian.showcaseview.actionbar.reflection.BaseReflector;
 import com.espian.showcaseview.anim.AnimationUtils;
+import com.espian.showcaseview.anim.AnimationUtils.AnimationEndListener;
+import com.espian.showcaseview.anim.AnimationUtils.AnimationStartListener;
 import com.espian.showcaseview.drawing.ClingDrawer;
 import com.espian.showcaseview.drawing.ClingDrawerImpl;
 import com.espian.showcaseview.drawing.TextDrawer;
@@ -37,9 +40,6 @@ import com.espian.showcaseview.utils.Calculator;
 import com.espian.showcaseview.utils.PointAnimator;
 import com.github.espiandev.showcaseview.R;
 import com.nineoldandroids.animation.Animator;
-
-import static com.espian.showcaseview.anim.AnimationUtils.AnimationEndListener;
-import static com.espian.showcaseview.anim.AnimationUtils.AnimationStartListener;
 
 /**
  * A view which allows you to showcase areas of your app with an explanation.
@@ -390,10 +390,14 @@ public class ShowcaseView extends RelativeLayout
         boolean recalculatedCling = mShowcaseDrawer.calculateShowcaseRect(showcaseX, showcaseY);
         boolean recalculateText = recalculatedCling || mAlteredText;
         mAlteredText = false;
+        
+        Matrix mm = new Matrix();
+        mm.postScale(scaleMultiplier, scaleMultiplier, showcaseX, showcaseY);
+        canvas.setMatrix(mm);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB && !mHasNoTarget) {
         	Path path = new Path();
-            path.addCircle(showcaseX, showcaseY, showcaseRadius * scaleMultiplier, Path.Direction.CW);
+            path.addCircle(showcaseX, showcaseY, showcaseRadius, Path.Direction.CW);
             canvas.clipPath(path, Op.DIFFERENCE);
         }
 
@@ -402,9 +406,11 @@ public class ShowcaseView extends RelativeLayout
 
         // Draw the showcase drawable
         if (!mHasNoTarget) {
-            mShowcaseDrawer.drawShowcase(canvas, showcaseX, showcaseY, scaleMultiplier, showcaseRadius);
+            mShowcaseDrawer.drawShowcase(canvas, showcaseX, showcaseY, showcaseRadius);
         }
-
+        
+        canvas.setMatrix(new Matrix());
+        
         // Draw the text on the screen, recalculating its position if necessary
         if (recalculateText) {
             mTextDrawer.calculateTextPosition(canvas.getWidth(), canvas.getHeight(), this);

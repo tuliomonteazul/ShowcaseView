@@ -4,42 +4,31 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.view.ViewParent;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.espian.showcaseview.actionbar.ActionBarViewWrapper;
 import com.espian.showcaseview.actionbar.reflection.BaseReflector;
 
-public class ActionItemTarget implements Target {
+public class ActionTabTarget implements Target {
 
     private final Activity mActivity;
-    private final int mItemId;
+    private final int tabId;
 
     ActionBarViewWrapper mActionBarWrapper;
 
-    public ActionItemTarget(Activity activity, int itemId) {
+    public ActionTabTarget(Activity activity, int tabId) {
         mActivity = activity;
-        mItemId = itemId;
+		this.tabId = tabId;
     }
 
     @Override
     public Point getPoint() {
         setUp();
-        ViewTarget viewTarget = new ViewTarget(mActionBarWrapper.getActionItem(mItemId));
-        Point point = viewTarget.getPoint();
-    	if (point == null) {
-    		point = getAlternativePoint();
-    	}
-        return point;
+        return new ViewTarget(mActionBarWrapper.getTabItem(tabId)).getPoint();
     }
 
-    private Point getAlternativePoint() {
-    	ViewTarget viewTarget = new ViewTarget(mActionBarWrapper.getOverflowView());
-    	Point point = viewTarget.getPoint();
-    	if (point == null) {
-    		return new Point(0, 0);
-    	}
-		return point;
-	}
-
-	protected void setUp() {
+    protected void setUp() {
+    	
         BaseReflector reflector = BaseReflector.getReflectorForActivity(mActivity);
         ViewParent p = reflector.getActionBarView(); //ActionBarView
         mActionBarWrapper = new ActionBarViewWrapper(p);
